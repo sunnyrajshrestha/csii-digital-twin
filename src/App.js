@@ -144,6 +144,7 @@ export default function DemoDigitalTwin() {
   };
 
   
+// Simulate real-time updates (skip rooms with real sensors)
 useEffect(() => {
   const interval = setInterval(() => {
     setData(prevData => ({
@@ -168,6 +169,8 @@ useEffect(() => {
     setLastUpdate(new Date());
   }, 5000);
 
+  return () => clearInterval(interval);
+}, [selectedFloor, realSensorData]);
     return () => clearInterval(interval);
   }, [selectedFloor]);
 
