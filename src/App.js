@@ -689,11 +689,29 @@ export default function DemoDigitalTwin() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950 p-6">
       {/* Demo Banner */}
       {demoMode && (
-        <div className="max-w-[1800px] mx-auto mb-4">
-          {isLiveDataConnected && realSensorData['415'] && (
-            <div className="mb-4">
-              
+         <div className="max-w-[1800px] mx-auto mb-4">
+    {isLiveDataConnected && Object.keys(realSensorData).length > 0 && (
+      <div className="mb-4">
+        <div className="bg-green-600/90 rounded-lg p-3 border border-green-400/50">
+          <div className="flex items-center justify-between">
+            <p className="text-white font-bold">
+              🔴 LIVE - {Object.keys(realSensorData).length} Room{Object.keys(realSensorData).length > 1 ? 's' : ''}
+            </p>
+            <div className="flex gap-6 text-white">
+              {Object.entries(realSensorData)
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([roomId, data]) => (
+                <div key={roomId} className="flex gap-4">
+                  <span className="font-semibold">Room {roomId}:</span>
+                  <span>{data.temperature}°C</span>
+                  <span>{data.humidity}%</span>
+                  <span>{data.occupancy} people</span>
+                </div>
+              ))}
             </div>
+          </div>
+        </div>
+      </div>
           )}
           <div className="bg-gradient-to-r from-pink-700/80 to-pink-700/80 backdrop-blur-xl rounded-lg p-3 border border-orange-500/30 flex items-center justify-between">
             <div className="flex items-center gap-3">
