@@ -143,7 +143,7 @@ export default function DemoDigitalTwin() {
     };
   };
 
-  / Simulate real-time updates (skip rooms with real sensors)
+  
 useEffect(() => {
   const interval = setInterval(() => {
     setData(prevData => ({
