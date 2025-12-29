@@ -185,30 +185,39 @@ export default function DemoDigitalTwin() {
     return () => clearInterval(interval);
   }, []);
 
-  // Update Room 415 with real data
+  // Update ALL rooms with real data dynamically
   useEffect(() => {
-    if (realSensorData['415']) {
-      const live = realSensorData['415'];
-      setData(prevData => ({
-        ...prevData,
-        floors: {
-          ...prevData.floors,
-          4: {
-            ...prevData.floors[4],
-            rooms: prevData.floors[4].rooms.map(room => 
-              room.id === '415' ? {
-                ...room,
-                temp: live.temperature,
-                humidity: live.humidity,
-                occupancy: live.occupancy
-              } : room
-            )
+    if (Object.keys(realSensorData).length > 0) {
+      setData(prevData => {
+        const updatedFloors = { ...prevData.floors };
+        
+        // Loop through each room in real sensor data
+        Object.entries(realSensorData).forEach(([roomId, liveData]) => {
+          const floorNumber = liveData.floor;
+          
+          // Update the appropriate floor
+          if (updatedFloors[floorNumber]) {
+            updatedFloors[floorNumber] = {
+              ...updatedFloors[floorNumber],
+              rooms: updatedFloors[floorNumber].rooms.map(room => 
+                room.id === roomId ? {
+                  ...room,
+                  temp: liveData.temperature || room.temp,
+                  humidity: liveData.humidity || room.humidity,
+                  occupancy: liveData.occupancy || 0,
+                  wifiDevices: liveData.wifiDevices || 0,
+                  motionDetected: liveData.occupancy > 0,
+                  sensorStatus: liveData.sensorStatus || 'offline'
+                } : room
+              )
+            };
           }
-        }
-      }));
+        });
+        
+        return { ...prevData, floors: updatedFloors };
+      });
     }
   }, [realSensorData]);
-
   // Auto-rotate 3D view
   useEffect(() => {
     if (view3D) {
