@@ -690,48 +690,7 @@ export default function DemoDigitalTwin() {
       {/* Demo Banner */}
       {demoMode && (
          <div className="max-w-[1800px] mx-auto mb-4">
-          {isLiveDataConnected && Object.keys(realSensorData).length > 0 && (
-            <div className="mb-4">
-              <div className="bg-gradient-to-r from-green-600/95 to-emerald-600/95 rounded-xl p-4 border border-green-400/50">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="relative flex h-4 w-4">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-4 w-4 bg-white"></span>
-                    </div>
-                    <div>
-                      <p className="text-white font-bold text-lg">
-                        🔴 LIVE ESP8266 - {Object.keys(realSensorData).length} Room{Object.keys(realSensorData).length > 1 ? 's' : ''} Connected
-                      </p>
-                      <p className="text-green-50 text-sm">Real-time DHT11 + WiFi Occupancy Detection</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4 text-white overflow-x-auto">
-                    {Object.entries(realSensorData)
-                      .sort(([a], [b]) => a.localeCompare(b))
-                      .map(([roomId, data]) => (
-                      <div key={roomId} className="text-center border-l border-green-300/30 pl-4 first:border-l-0 first:pl-0">
-                        <p className="text-sm text-green-100 mb-1 font-semibold">Room {roomId}</p>
-                        <div className="flex gap-3 text-sm">
-                          <div>
-                            <p className="text-lg font-bold">{data.temperature}°C</p>
-                            <p className="text-xs text-green-50">Temp</p>
-                          </div>
-                          <div>
-                            <p className="text-lg font-bold">{data.humidity}%</p>
-                            <p className="text-xs text-green-50">Humidity</p>
-                          </div>
-                          <div>
-                            <p className="text-lg font-bold">{data.occupancy}</p>
-                            <p className="text-xs text-green-50">People</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+    
           )}
           <div className="bg-gradient-to-r from-pink-700/80 to-pink-700/80 backdrop-blur-xl rounded-lg p-3 border border-orange-500/30 flex items-center justify-between">
             <div className="flex items-center gap-3">
