@@ -692,21 +692,7 @@ export default function DemoDigitalTwin() {
          <div className="max-w-[1800px] mx-auto mb-4">
     {isLiveDataConnected && Object.keys(realSensorData).length > 0 && (
       <div className="mb-4">
-        <div className="bg-green-600/90 rounded-lg p-3 border border-green-400/50">
-          <div className="flex items-center justify-between">
-            <p className="text-white font-bold">
-              🔴 LIVE - {Object.keys(realSensorData).length} Room{Object.keys(realSensorData).length > 1 ? 's' : ''}
-            </p>
-            <div className="flex gap-6 text-white">
-              {Object.entries(realSensorData)
-                .sort(([a], [b]) => a.localeCompare(b))
-                .map(([roomId, data]) => (
-                <div key={roomId} className="flex gap-4">
-                  <span className="font-semibold">Room {roomId}:</span>
-                  <span>{data.temperature}°C</span>
-                  <span>{data.humidity}%</span>
-                  <span>{data.occupancy} people</span>
-                </div>
+        
               ))}
             </div>
           </div>
