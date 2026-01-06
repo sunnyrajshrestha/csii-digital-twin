@@ -145,32 +145,32 @@ export default function DemoDigitalTwin() {
 
   
 // Simulate real-time updates (skip rooms with real sensors)
-useEffect(() => {
-  const interval = setInterval(() => {
-    setData(prevData => ({
-      ...prevData,
-      floors: {
-        ...prevData.floors,
-        [selectedFloor]: {
-          ...prevData.floors[selectedFloor],
-          rooms: prevData.floors[selectedFloor].rooms.map(room => {
-            // Skip rooms that have real sensor data
-            if (realSensorData[room.id]) {
-              return room; // Keep real data unchanged
-            }
-            // Generate simulated data for other rooms
-            return generateRealisticData(room);
-          })
-        }
-      },
-      time: new Date(),
-      dataPoints: prevData.dataPoints + Math.floor(Math.random() * 25) + 1
-    }));
-    setLastUpdate(new Date());
-  }, 5000);
+// useEffect(() => {
+//   const interval = setInterval(() => {
+//     setData(prevData => ({
+//       ...prevData,
+//       floors: {
+//         ...prevData.floors,
+//         [selectedFloor]: {
+//           ...prevData.floors[selectedFloor],
+//           rooms: prevData.floors[selectedFloor].rooms.map(room => {
+//             // Skip rooms that have real sensor data
+//             if (realSensorData[room.id]) {
+//               return room; // Keep real data unchanged
+//             }
+//             // Generate simulated data for other rooms
+//             return generateRealisticData(room);
+//           })
+//         }
+//       },
+//       time: new Date(),
+//       dataPoints: prevData.dataPoints + Math.floor(Math.random() * 25) + 1
+//     }));
+//     setLastUpdate(new Date());
+//   }, 5000);
 
-  return () => clearInterval(interval);
-}, [selectedFloor, realSensorData]);
+//   return () => clearInterval(interval);
+// }, [selectedFloor, realSensorData]);
     
   // Fetch real ESP8266 sensor data
   useEffect(() => {
