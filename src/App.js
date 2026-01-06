@@ -46,62 +46,62 @@ export default function DemoDigitalTwin() {
   ];
 
   // Simulated sensor data generator
-  const fetchRealData = (room) => {
-    const now = new Date();
-    const hour = now.getHours();
-    const dayOfWeek = now.getDay();
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-    const isWorkingHours = hour >= 8 && hour <= 18;
+  // const fetchRealData = (room) => {
+  //   const now = new Date();
+  //   const hour = now.getHours();
+  //   const dayOfWeek = now.getDay();
+  //   const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+  //   const isWorkingHours = hour >= 8 && hour <= 18;
     
-    // Base occupancy based on room type and time
-    let baseOccupancy = 0;
-    if (room.special === 'auditorium') {
-      baseOccupancy = isWorkingHours && !isWeekend ? 
-        Math.floor(room.capacity * (0.3 + Math.random() * 0.4)) : 
-        Math.floor(room.capacity * 0.1);
-    } else if (room.name.includes('Meeting')) {
-      baseOccupancy = isWorkingHours && !isWeekend ? 
-        Math.floor(room.capacity * (0.4 + Math.random() * 0.5)) : 0;
-    } else if (room.name.includes('Study') || room.name.includes('Lounge')) {
-      baseOccupancy = isWorkingHours ? 
-        Math.floor(room.capacity * (0.5 + Math.random() * 0.3)) :
-        Math.floor(room.capacity * (0.2 + Math.random() * 0.3));
-    } else if (room.name.includes('Office')) {
-      baseOccupancy = isWorkingHours && !isWeekend ? 
-        Math.floor(room.capacity * (0.6 + Math.random() * 0.3)) : 
-        Math.floor(room.capacity * 0.1);
-    } else {
-      baseOccupancy = isWorkingHours && !isWeekend ? 
-        Math.floor(room.capacity * (0.4 + Math.random() * 0.4)) : 
-        Math.floor(room.capacity * 0.2);
-    }
+  //   // Base occupancy based on room type and time
+  //   let baseOccupancy = 0;
+  //   if (room.special === 'auditorium') {
+  //     baseOccupancy = isWorkingHours && !isWeekend ? 
+  //       Math.floor(room.capacity * (0.3 + Math.random() * 0.4)) : 
+  //       Math.floor(room.capacity * 0.1);
+  //   } else if (room.name.includes('Meeting')) {
+  //     baseOccupancy = isWorkingHours && !isWeekend ? 
+  //       Math.floor(room.capacity * (0.4 + Math.random() * 0.5)) : 0;
+  //   } else if (room.name.includes('Study') || room.name.includes('Lounge')) {
+  //     baseOccupancy = isWorkingHours ? 
+  //       Math.floor(room.capacity * (0.5 + Math.random() * 0.3)) :
+  //       Math.floor(room.capacity * (0.2 + Math.random() * 0.3));
+  //   } else if (room.name.includes('Office')) {
+  //     baseOccupancy = isWorkingHours && !isWeekend ? 
+  //       Math.floor(room.capacity * (0.6 + Math.random() * 0.3)) : 
+  //       Math.floor(room.capacity * 0.1);
+  //   } else {
+  //     baseOccupancy = isWorkingHours && !isWeekend ? 
+  //       Math.floor(room.capacity * (0.4 + Math.random() * 0.4)) : 
+  //       Math.floor(room.capacity * 0.2);
+  //   }
 
-    // Environmental data based on occupancy
-    const tempBase = 22 + (baseOccupancy / room.capacity) * 3;
-    const humidityBase = 45 + (baseOccupancy / room.capacity) * 15;
-    const co2Base = 400 + (baseOccupancy * 50);
-    const lightBase = isWorkingHours ? 600 + Math.random() * 200 : 200 + Math.random() * 100;
+  //   // Environmental data based on occupancy
+  //   const tempBase = 22 + (baseOccupancy / room.capacity) * 3;
+  //   const humidityBase = 45 + (baseOccupancy / room.capacity) * 15;
+  //   const co2Base = 400 + (baseOccupancy * 50);
+  //   const lightBase = isWorkingHours ? 600 + Math.random() * 200 : 200 + Math.random() * 100;
 
-    // WiFi device simulation
-    const devicesPerPerson = 1.8 + Math.random() * 0.7;
-    const wifiDevices = Math.floor(baseOccupancy * devicesPerPerson);
-    const confidence = Math.min(95, 60 + (baseOccupancy > 0 ? 20 : 0) + (wifiDevices > 0 ? 15 : 0));
+  //   // WiFi device simulation
+  //   const devicesPerPerson = 1.8 + Math.random() * 0.7;
+  //   const wifiDevices = Math.floor(baseOccupancy * devicesPerPerson);
+  //   const confidence = Math.min(95, 60 + (baseOccupancy > 0 ? 20 : 0) + (wifiDevices > 0 ? 15 : 0));
 
-    return {
-      ...room,
-      occupancy: baseOccupancy,
-      temp: Math.round((tempBase + (Math.random() - 0.5) * 2) * 10) / 10,
-      humidity: Math.round(humidityBase + (Math.random() - 0.5) * 10),
-      co2: Math.round(co2Base + (Math.random() - 0.5) * 100),
-      light: Math.round(lightBase),
-      wifiDevices: wifiDevices,
-      confidence: confidence,
-      lastSeen: now.toISOString(),
-      sensorStatus: Math.random() > 0.05 ? 'online' : 'offline',
-      batteryLevel: 85 + Math.random() * 15,
-      motionDetected: baseOccupancy > 0 && Math.random() > 0.2
-    };
-  };
+  //   return {
+  //     ...room,
+  //     occupancy: baseOccupancy,
+  //     temp: Math.round((tempBase + (Math.random() - 0.5) * 2) * 10) / 10,
+  //     humidity: Math.round(humidityBase + (Math.random() - 0.5) * 10),
+  //     co2: Math.round(co2Base + (Math.random() - 0.5) * 100),
+  //     light: Math.round(lightBase),
+  //     wifiDevices: wifiDevices,
+  //     confidence: confidence,
+  //     lastSeen: now.toISOString(),
+  //     sensorStatus: Math.random() > 0.05 ? 'online' : 'offline',
+  //     batteryLevel: 85 + Math.random() * 15,
+  //     motionDetected: baseOccupancy > 0 && Math.random() > 0.2
+  //   };
+  // };
 
   const [data, setData] = useState({
     floors: {
