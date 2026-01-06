@@ -171,9 +171,7 @@ useEffect(() => {
 
   return () => clearInterval(interval);
 }, [selectedFloor, realSensorData]);
-    return () => clearInterval(interval);
-  }, [selectedFloor]);
-
+    
   // Fetch real ESP8266 sensor data
   useEffect(() => {
     const fetchRealData = async () => {
@@ -501,16 +499,7 @@ const downloadPowerBITemplate = async () => {
     alert('Failed to generate Power BI template. Check console for details.');
   }
 };
-    const blob = new Blob([JSON.stringify(powerBIConfig, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'PowerBI_Building_Analytics_Template.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
+    
 
   const generateSamplePowerBIData = () => {
     return floor.rooms.slice(0, 5).map(room => ({
@@ -870,8 +859,6 @@ const downloadPowerBITemplate = async () => {
       {/* Demo Banner */}
       {demoMode && (
          <div className="max-w-[1800px] mx-auto mb-4">
-    
-          )}
           <div className="bg-gradient-to-r from-pink-700/80 to-pink-700/80 backdrop-blur-xl rounded-lg p-3 border border-orange-500/30 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Activity className="w-5 h-5 text-orange-300 animate-pulse" />
