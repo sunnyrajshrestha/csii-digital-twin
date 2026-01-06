@@ -46,7 +46,7 @@ export default function DemoDigitalTwin() {
   ];
 
   // Simulated sensor data generator
-  const generateRealisticData = (room) => {
+  const fetchRealData = (room) => {
     const now = new Date();
     const hour = now.getHours();
     const dayOfWeek = now.getDay();
@@ -105,8 +105,8 @@ export default function DemoDigitalTwin() {
 
   const [data, setData] = useState({
     floors: {
-      4: { name: 'Floor 4', desc: 'Live Feed From 4th Floor', rooms: floor4Rooms.map(generateRealisticData) },
-      3: { name: 'Floor 3', desc: 'Live Feed from 3rd Floor', rooms: floor3Rooms.map(generateRealisticData) }
+      4: { name: 'Floor 4', desc: 'Live Feed From 4th Floor', rooms: floor4Rooms.map(fetchRealData) },
+      3: { name: 'Floor 3', desc: 'Live Feed from 3rd Floor', rooms: floor3Rooms.map(fetchRealData) }
     },
     time: new Date(),
     totalSensors: 25,
@@ -159,7 +159,7 @@ export default function DemoDigitalTwin() {
 //               return room; // Keep real data unchanged
 //             }
 //             // Generate simulated data for other rooms
-//             return generateRealisticData(room);
+//             return fetchRealData(room);
 //           })
 //         }
 //       },
@@ -325,7 +325,7 @@ const exportDemoData = async () => {
       for (let hour = 0; hour < 24; hour++) {
         [...floor4Rooms, ...floor3Rooms].forEach(room => {
           const timestamp = new Date(now.getTime() - (day * 24 + (23 - hour)) * 60 * 60 * 1000);
-          const simulatedRoom = generateRealisticData(room);
+          const simulatedRoom = fetchRealData(room);
           
           rows.push([
             timestamp.toISOString(),
