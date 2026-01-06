@@ -336,7 +336,7 @@ const exportDemoData = async () => {
     console.error('❌ Export error:', error);
     alert('Failed to export data. Check console for details.');
   }
-// };
+};
 //   const generateDemoCSVData = () => {
 //     const headers = [
 //       'Timestamp', 'Room_ID', 'Floor_ID', 'Building_ID', 'Temperature_C', 'Humidity_%', 
