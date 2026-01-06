@@ -239,19 +239,80 @@ useEffect(() => {
   }, [view3D]);
 
   // Demo data export function
-  const exportDemoData = () => {
-    const csvData = generateDemoCSVData();
+  // Export REAL sensor data from MongoDB - ALL ROOMS
+const exportDemoData = async () => {
+  try {
+    // First, get list of all rooms
+    const roomsResponse = await fetch('https://csiibackened.onrender.com/api/rooms');
+    const currentRooms = await roomsResponse.json();
+    const roomIds = Object.keys(currentRooms);
+    
+    if (roomIds.length === 0) {
+      alert('No rooms found. Make sure ESP8266 devices are running.');
+      return;
+    }
+    
+    console.log('📡 Exporting data for rooms:', roomIds);
+    
+    // Fetch historical data for ALL rooms
+    const allData = [];
+    for (const roomId of roomIds) {
+      try {
+        const response = await fetch(`https://csiibackened.onrender.com/api/history/${roomId}?hours=168`);
+        const roomData = await response.json();
+        allData.push(...roomData);
+        console.log(`✅ Room ${roomId}: ${roomData.length} readings`);
+      } catch (error) {
+        console.error(`❌ Error fetching room ${roomId}:`, error);
+      }
+    }
+    
+    if (allData.length === 0) {
+      alert('No historical data available. Make sure devices have been running for a while.');
+      return;
+    }
+    
+    // Sort by timestamp
+    allData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    
+    // Convert to CSV
+    const headers = [
+      'Timestamp', 'Room_ID', 'Floor_ID', 'Building_ID', 'Temperature_C', 'Humidity_%', 
+      'Occupancy_Count', 'WiFi_Devices', 'Sensor_Status'
+    ];
+    
+    const rows = allData.map(reading => [
+      new Date(reading.timestamp).toISOString(),
+      reading.metadata?.roomId || 'unknown',
+      reading.metadata?.floor || '',
+      reading.metadata?.buildingId || 'CSII',
+      reading.temperature || 0,
+      reading.humidity || 0,
+      reading.occupancy || 0,
+      reading.wifiDevices || 0,
+      reading.sensorStatus || 'unknown'
+    ].join(','));
+    
+    const csvData = [headers.join(','), ...rows].join('\n');
+    
+    // Download CSV
     const blob = new Blob([csvData], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `building_sensor_demo_data.csv`;
+    a.download = `csii_all_rooms_sensor_data_${new Date().toISOString().split('T')[0]}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
-
+    
+    console.log(`✅ Exported ${allData.length} readings from ${roomIds.length} room(s): ${roomIds.join(', ')}`);
+    alert(`✅ Exported ${allData.length} readings from rooms: ${roomIds.join(', ')}`);
+  } catch (error) {
+    console.error('❌ Export error:', error);
+    alert('Failed to export data. Check console for details.');
+  }
+};
   const generateDemoCSVData = () => {
     const headers = [
       'Timestamp', 'Room_ID', 'Floor_ID', 'Building_ID', 'Temperature_C', 'Humidity_%', 
@@ -291,46 +352,155 @@ useEffect(() => {
     return [headers.join(','), ...rows].join('\n');
   };
 
-  const downloadPowerBITemplate = () => {
+  // Generate Power BI template with REAL data - ALL ROOMS
+const downloadPowerBITemplate = async () => {
+  try {
+    // Get list of all rooms
+    const roomsResponse = await fetch('https://csiibackened.onrender.com/api/rooms');
+    const currentRooms = await roomsResponse.json();
+    const roomIds = Object.keys(currentRooms);
+    
+    if (roomIds.length === 0) {
+      alert('No rooms found. Make sure ESP8266 devices are running.');
+      return;
+    }
+    
+    console.log('📊 Creating Power BI template for rooms:', roomIds);
+    
+    // Fetch data for all rooms
+    const allData = [];
+    const allStats = {};
+    
+    for (const roomId of roomIds) {
+      try {
+        // Get historical data
+        const historyResponse = await fetch(`https://csiibackened.onrender.com/api/history/${roomId}?hours=168`);
+        const roomHistory = await historyResponse.json();
+        allData.push(...roomHistory);
+        
+        // Get statistics
+        const statsResponse = await fetch(`https://csiibackened.onrender.com/api/stats/${roomId}?hours=168`);
+        const roomStats = await statsResponse.json();
+        allStats[roomId] = roomStats;
+        
+        console.log(`✅ Room ${roomId}: ${roomHistory.length} readings`);
+      } catch (error) {
+        console.error(`❌ Error fetching room ${roomId}:`, error);
+      }
+    }
+    
+    if (allData.length === 0) {
+      alert('No data available. Make sure devices have been running for a while.');
+      return;
+    }
+    
+    // Sort by timestamp
+    allData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    
     const powerBIConfig = {
-      "name": "Building IoT Analytics Template",
-      "description": "Power BI template for building sensor analytics",
-      "dataConnections": [
-        {
-          "name": "Building Sensors API",
-          "type": "REST API",
-          "url": "https://building-iot.university.edu/api/powerbi/sensors",
-          "method": "GET",
-          "refreshInterval": "15 minutes"
-        }
-      ],
-      "sampleData": generateSamplePowerBIData(),
+      "name": "CSII Building IoT Analytics - All Rooms",
+      "description": "Power BI template for all room sensors from MongoDB Atlas",
+      "version": "1.0",
+      "createdDate": new Date().toISOString(),
+      "dataSource": {
+        "type": "MongoDB Atlas",
+        "connectionString": "mongodb+srv://sunnys_db_user:<password>@digital-twin.gq1elir.mongodb.net/",
+        "database": "csii-iot",
+        "collection": "sensor-readings",
+        "note": "Replace <password> with your actual password"
+      },
+      "apiEndpoints": {
+        "realtime_all": "https://csiibackened.onrender.com/api/rooms",
+        "realtime_single": "https://csiibackened.onrender.com/api/rooms/{roomId}",
+        "historical": "https://csiibackened.onrender.com/api/history/{roomId}?hours=168",
+        "statistics": "https://csiibackened.onrender.com/api/stats/{roomId}?hours=168"
+      },
+      "rooms": roomIds.map(roomId => ({
+        roomId: roomId,
+        floor: currentRooms[roomId].floor,
+        buildingId: currentRooms[roomId].buildingId || 'CSII',
+        statistics: allStats[roomId]
+      })),
+      "sampleData": allData.slice(0, 500).map(reading => ({
+        DateTime: reading.timestamp,
+        RoomID: reading.metadata?.roomId,
+        FloorID: reading.metadata?.floor,
+        BuildingID: reading.metadata?.buildingId || 'CSII',
+        Temperature: reading.temperature,
+        Humidity: reading.humidity,
+        Occupancy: reading.occupancy,
+        WiFiDevices: reading.wifiDevices,
+        SensorStatus: reading.sensorStatus
+      })),
+      "overallStatistics": {
+        "totalRooms": roomIds.length,
+        "totalReadings": allData.length,
+        "dataRange": {
+          "from": allData[0]?.timestamp,
+          "to": allData[allData.length - 1]?.timestamp
+        },
+        "roomBreakdown": Object.keys(allStats).map(roomId => ({
+          roomId: roomId,
+          avgTemp: allStats[roomId].avgTemp,
+          avgHumidity: allStats[roomId].avgHumidity,
+          totalReadings: allStats[roomId].totalReadings
+        }))
+      },
       "measures": [
-        "Average Temperature",
-        "Peak Occupancy", 
-        "Comfort Index",
-        "Space Utilization Rate",
-        "Energy Efficiency Score"
+        "Average Temperature (All Rooms)",
+        "Average Humidity (All Rooms)",
+        "Peak Occupancy",
+        "Room Utilization Rate",
+        "WiFi Device Count",
+        "Comfort Index"
       ],
       "visualizations": [
         {
-          "type": "heatmap",
-          "title": "Occupancy Heatmap",
-          "description": "Shows occupancy patterns by room and time"
+          "type": "line_chart",
+          "title": "Temperature Trends - All Rooms",
+          "description": "Compare temperature across all monitored rooms over time"
         },
         {
-          "type": "line_chart", 
-          "title": "Environmental Trends",
-          "description": "Temperature, humidity, and CO2 over time"
+          "type": "heatmap",
+          "title": "Room Occupancy Heatmap",
+          "description": "Visual representation of room usage patterns"
         },
         {
           "type": "bar_chart",
-          "title": "Room Utilization",
-          "description": "Space utilization by room"
+          "title": "Average Conditions by Room",
+          "description": "Compare environmental conditions across rooms"
+        },
+        {
+          "type": "gauge",
+          "title": "Current Status Dashboard",
+          "description": "Real-time readings from all active sensors"
         }
-      ]
+      ],
+      "instructions": {
+        "step1": "Import this JSON into Power BI Desktop",
+        "step2": "Use the API endpoints to connect to live data",
+        "step3": "Sample data is included for initial visualization testing",
+        "step4": "Configure refresh schedule for real-time updates"
+      }
     };
 
+    const blob = new Blob([JSON.stringify(powerBIConfig, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `PowerBI_CSII_AllRooms_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    console.log(`✅ Power BI template with ${allData.length} readings from ${roomIds.length} room(s)`);
+    alert(`✅ Power BI template created with data from rooms: ${roomIds.join(', ')}`);
+  } catch (error) {
+    console.error('❌ Power BI export error:', error);
+    alert('Failed to generate Power BI template. Check console for details.');
+  }
+};
     const blob = new Blob([JSON.stringify(powerBIConfig, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
