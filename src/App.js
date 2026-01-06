@@ -104,16 +104,42 @@ export default function DemoDigitalTwin() {
   // };
 
   const [data, setData] = useState({
-    floors: {
-      4: { name: 'Floor 4', desc: 'Live Feed From 4th Floor', rooms: floor4Rooms.map(fetchRealData) },
-      3: { name: 'Floor 3', desc: 'Live Feed from 3rd Floor', rooms: floor3Rooms.map(fetchRealData) }
-    },
-    time: new Date(),
-    totalSensors: 25,
-    onlineSensors: 24,
-    dataPoints: 15847,
-    alerts: 2
-  });
+  floors: {
+    4: { name: 'Floor 4', desc: 'Live Feed From 4th Floor', rooms: floor4Rooms.map(room => ({
+      ...room,
+      occupancy: 0,
+      temp: 0,
+      humidity: 0,
+      co2: 0,
+      light: 0,
+      wifiDevices: 0,
+      confidence: 0,
+      lastSeen: new Date().toISOString(),
+      sensorStatus: 'offline',
+      batteryLevel: 0,
+      motionDetected: false
+    }))},
+    3: { name: 'Floor 3', desc: 'Live Feed from 3rd Floor', rooms: floor3Rooms.map(room => ({
+      ...room,
+      occupancy: 0,
+      temp: 0,
+      humidity: 0,
+      co2: 0,
+      light: 0,
+      wifiDevices: 0,
+      confidence: 0,
+      lastSeen: new Date().toISOString(),
+      sensorStatus: 'offline',
+      batteryLevel: 0,
+      motionDetected: false
+    }))}
+  },
+  time: new Date(),
+  totalSensors: 25,
+  onlineSensors: 24,
+  dataPoints: 15847,
+  alerts: 2
+});
 
   const floor = data.floors[selectedFloor];
   const total = floor.rooms.reduce((s, r) => s + r.occupancy, 0);
@@ -310,42 +336,42 @@ const exportDemoData = async () => {
     console.error('❌ Export error:', error);
     alert('Failed to export data. Check console for details.');
   }
-};
-  const generateDemoCSVData = () => {
-    const headers = [
-      'Timestamp', 'Room_ID', 'Floor_ID', 'Building_ID', 'Temperature_C', 'Humidity_%', 
-      'CO2_PPM', 'Light_Level', 'Occupancy_Count', 'WiFi_Devices', 'Confidence_%',
-      'Motion_Detected', 'Sensor_Status', 'Battery_Level'
-    ];
+// };
+//   const generateDemoCSVData = () => {
+//     const headers = [
+//       'Timestamp', 'Room_ID', 'Floor_ID', 'Building_ID', 'Temperature_C', 'Humidity_%', 
+//       'CO2_PPM', 'Light_Level', 'Occupancy_Count', 'WiFi_Devices', 'Confidence_%',
+//       'Motion_Detected', 'Sensor_Status', 'Battery_Level'
+//     ];
 
-    const rows = [];
-    const now = new Date();
+//     const rows = [];
+//     const now = new Date();
     
-    for (let day = 0; day < 7; day++) {
-      for (let hour = 0; hour < 24; hour++) {
-        [...floor4Rooms, ...floor3Rooms].forEach(room => {
-          const timestamp = new Date(now.getTime() - (day * 24 + (23 - hour)) * 60 * 60 * 1000);
-          const simulatedRoom = fetchRealData(room);
+//     for (let day = 0; day < 7; day++) {
+//       for (let hour = 0; hour < 24; hour++) {
+//         [...floor4Rooms, ...floor3Rooms].forEach(room => {
+//           const timestamp = new Date(now.getTime() - (day * 24 + (23 - hour)) * 60 * 60 * 1000);
+//           const simulatedRoom = fetchRealData(room);
           
-          rows.push([
-            timestamp.toISOString(),
-            room.id,
-            selectedFloor,
-            'CS_Building',
-            simulatedRoom.temp,
-            simulatedRoom.humidity,
-            simulatedRoom.co2,
-            simulatedRoom.light,
-            simulatedRoom.occupancy,
-            simulatedRoom.wifiDevices,
-            simulatedRoom.confidence,
-            simulatedRoom.motionDetected,
-            simulatedRoom.sensorStatus,
-            simulatedRoom.batteryLevel
-          ].join(','));
-        });
-      }
-    }
+//           rows.push([
+//             timestamp.toISOString(),
+//             room.id,
+//             selectedFloor,
+//             'CS_Building',
+//             simulatedRoom.temp,
+//             simulatedRoom.humidity,
+//             simulatedRoom.co2,
+//             simulatedRoom.light,
+//             simulatedRoom.occupancy,
+//             simulatedRoom.wifiDevices,
+//             simulatedRoom.confidence,
+//             simulatedRoom.motionDetected,
+//             simulatedRoom.sensorStatus,
+//             simulatedRoom.batteryLevel
+//           ].join(','));
+//         });
+//       }
+//     }
 
     return [headers.join(','), ...rows].join('\n');
   };
