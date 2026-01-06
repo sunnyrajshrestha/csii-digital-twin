@@ -373,8 +373,8 @@ const exportDemoData = async () => {
 //       }
 //     }
 
-    return [headers.join(','), ...rows].join('\n');
-  };
+  //   return [headers.join(','), ...rows].join('\n');
+  // };
 
   // Generate Power BI template with REAL data - ALL ROOMS
 const downloadPowerBITemplate = async () => {
