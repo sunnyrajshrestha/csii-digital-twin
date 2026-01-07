@@ -148,13 +148,13 @@ export default function DemoDigitalTwin() {
   const hum = Math.round(floor.rooms.reduce((s, r) => s + r.humidity, 0) / floor.rooms.length);
   const co2 = Math.round(floor.rooms.reduce((s, r) => s + r.co2, 0) / floor.rooms.length);
   const avgConfidence = Math.round(floor.rooms.reduce((s, r) => s + r.confidence, 0) / floor.rooms.length);
-  const floor = data.floors[selectedFloor];
-  const total = floor.rooms.reduce((s, r) => s + r.occupancy, 0);
-  const cap = floor.rooms.reduce((s, r) => s + r.capacity, 0);
-  const temp = (floor.rooms.reduce((s, r) => s + r.temp, 0) / floor.rooms.length).toFixed(1);
-  const hum = Math.round(floor.rooms.reduce((s, r) => s + r.humidity, 0) / floor.rooms.length);
-  const co2 = Math.round(floor.rooms.reduce((s, r) => s + r.co2, 0) / floor.rooms.length);
-  const avgConfidence = Math.round(floor.rooms.reduce((s, r) => s + r.confidence, 0) / floor.rooms.length);
+  // const floor = data.floors[selectedFloor];
+  // const total = floor.rooms.reduce((s, r) => s + r.occupancy, 0);
+  // const cap = floor.rooms.reduce((s, r) => s + r.capacity, 0);
+  // const temp = (floor.rooms.reduce((s, r) => s + r.temp, 0) / floor.rooms.length).toFixed(1);
+  // const hum = Math.round(floor.rooms.reduce((s, r) => s + r.humidity, 0) / floor.rooms.length);
+  // const co2 = Math.round(floor.rooms.reduce((s, r) => s + r.co2, 0) / floor.rooms.length);
+  // const avgConfidence = Math.round(floor.rooms.reduce((s, r) => s + r.confidence, 0) / floor.rooms.length);
 
   // ADD THESE LINES:
   // Calculate total sensors across all floors
