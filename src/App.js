@@ -254,6 +254,11 @@ export default function DemoDigitalTwin() {
                   ...room,
                   temp: liveData.temperature || room.temp,
                   humidity: liveData.humidity || room.humidity,
+                  co2: liveData.co2 || room.co2,                    // NEW
+                  mq135Raw: liveData.mq135Raw || room.mq135Raw,     // NEW
+                  pm25: liveData.pm25 || room.pm25,                 // NEW
+                  pm10: liveData.pm10 || room.pm10,                 // NEW
+                  pm1: liveData.pm1 || room.pm1,                    // NEW
                   occupancy: liveData.occupancy || 0,
                   wifiDevices: liveData.wifiDevices || 0,
                   motionDetected: liveData.occupancy > 0,
