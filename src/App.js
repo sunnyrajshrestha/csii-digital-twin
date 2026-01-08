@@ -14,14 +14,14 @@ export default function DemoDigitalTwin() {
 
   // FLOOR 4 - Demo Layout with simulated real data
   const floor4Rooms = [
-    { id: '415', name: 'Faculty Room', x: 50, z: 60, width: 110, depth: 180, capacity: 15 },
-    { id: '414', name: 'Executive Office', x: 50, z: 260, width: 110, depth: 180, capacity: 8 },
-    { id: '413', name: 'Operations Team', x: 180, z: 60, width: 130, depth: 180, capacity: 20 },
+    { id: '414', name: 'Executive Office', x: 50, z: 60, width: 110, depth: 180, capacity: 15 },
+    { id: '413', name: 'Operations Office', x: 50, z: 260, width: 110, depth: 180, capacity: 8 },
+    { id: '415', name: 'Faculty Room', x: 180, z: 60, width: 130, depth: 180, capacity: 20 },
     { id: '412', name: 'Faculty Office', x: 180, z: 260, width: 130, depth: 180, capacity: 30 },
     { id: '411', name: 'Student Lounge', x: 330, z: 60, width: 140, depth: 180, capacity: 50 },
     { id: '410', name: 'Student Study', x: 330, z: 260, width: 140, depth: 180, capacity: 40 },
-    { id: '409', name: 'Workshop Studio', x: 490, z: 60, width: 140, depth: 180, capacity: 25 },
-    { id: '408', name: 'FabLab', x: 490, z: 260, width: 140, depth: 180, capacity: 30, special: 'fablab' },
+    { id: '408', name: 'FabLab', x: 490, z: 60, width: 140, depth: 180, capacity: 25 },
+    { id: '409', name: 'Workshop Studio', x: 490, z: 260, width: 140, depth: 180, capacity: 30, special: 'fablab' },
     { id: '401', name: 'Business Center', x: 650, z: 60, width: 150, depth: 180, capacity: 40 },
     { id: '401/2', name: 'Meeting 2', x: 650, z: 260, width: 150, depth: 35, capacity: 6 },
     { id: '401/3', name: 'Meeting 3', x: 650, z: 310, width: 150, depth: 35, capacity: 6 },
